@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean	id="boardDao"
+		class="net.gondor.dao.impl.BoardDaoImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"></property>
+</bean>
+
+<bean	id="boardBiz"
+		class="net.gondor.biz.Impl.BoardBizImpl">
+	<property name="boardDao" ref="boardDao"></property>
+</bean>
+
+<bean	id="boardService"
+		class="net.gondor.service.impl.BoardServiceImpl">
+	<property name="boardBiz" ref="boardBiz"></property>
+</bean>
+
+</beans>
