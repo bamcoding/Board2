@@ -6,6 +6,7 @@
 	<typeAliases>
 		<typeAlias type="net.gondor.vo.EmployeesVO" alias="EmployeesVO"/>
 		<typeAlias type="net.gondor.vo.DepartmentsVO" alias="DepartmentsVO"/>
+		<typeAlias type="net.gondor.vo.JobVO" alias="JobVO"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="net/gondor/dao/impl/sql/boardDao.xml"/>

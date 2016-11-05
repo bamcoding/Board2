@@ -9,12 +9,82 @@
 	
 	<select id="getAllEmployee" resultType="EmployeesVO">
 		SELECT	/*[indexDao] [getAllEmployee]*/
-				EMPLOYEE_ID employeeId
-				, EMPLOYEE_NM employeeName
-				, POSITION position
+				E.EMPLOYEE_ID employeeId
+				, E.EMPLOYEE_NM employeeName
+				, P.POSITION_NM position
 				, JOB job
-				, SALARY salary
-				, DEPARTMENT_ID departmentId
-		FROM EMPLOYEES
+				, E.SALARY salary
+				, D.DEPARTMENT_NM departmentId
+		FROM 	EMPLOYEES E, DEPARTMENTS D, POSITION P
+		WHERE 	E.DEPARTMENT_ID=D.DEPARTMENT_ID
+		AND		P.POSITION_ID=E.POSITION
+		ORDER BY employeeId ASC
 	</select>
+	<insert id="addNewEmployee" parameterType="EmployeesVO">
+		INSERT INTO /*[addNewEmployee]*/
+					HR2.EMPLOYEES	(
+										EMPLOYEE_ID
+										, EMPLOYEE_NM
+										, POSITION
+										, JOB
+										, SALARY
+										, DEPARTMENT_ID
+									) 
+							VALUES	(
+										'EP-'||TO_CHAR(SYSDATE,'YYYY/MM/DD')||'-'||LPAD(EMPLOYEE_ID_SEQ.NEXTVAL,6,0)
+										, #{employeeName}
+										, #{position}
+										, #{job}
+										, #{salary}
+										, #{departmentId}						
+								  	)
+	</insert>
+	<delete id="removeEmployee" parameterType="string">
+		DELETE
+		FROM	HR2.EMPLOYEES
+		WHERE	EMPLOYEE_ID=#{employeeId}
+	</delete>
+	<update id="promotionEmployee" parameterType="string">
+		UPDATE HR2.EMPLOYEES
+		SET    POSITION           = POSITION+1
+		WHERE  EMPLOYEE_ID   = #{employeeId}
+	</update>
+	
+	<select id="getAllDepartment" resultType="DepartmentsVO">
+		SELECT	/*[indexDao] [getAllDepartment]*/
+				DEPARTMENT_ID departmentId
+				, DEPARTMENT_NM departmentName
+				, MANAGER_ID managerId
+		FROM 	HR2.DEPARTMENTS
+	</select>
+	<insert id="addNewDepartment" parameterType="DepartmentsVO">
+		INSERT INTO HR2.DEPARTMENTS	(
+										DEPARTMENT_ID
+										, DEPARTMENT_NM
+										, MANAGER_ID) 
+							VALUES	( 	'DP-'||TO_CHAR(SYSDATE,'YYYY/MM/DD')||'-'||LPAD(DEPARTMENT_ID_SEQ.NEXTVAL,6,0)
+										,#{departmentName}
+										,#{managerId})
+	</insert>
+	<delete id="removeDepartment" parameterType="string">
+		DELETE
+		FROM	HR2.DEPARTMENTS
+		WHERE	DEPARTMENT_ID=#{departmentId}
+	</delete>
+	<update id="changeDepartment" parameterType="hashmap">
+		UPDATE HR2.EMPLOYEES
+		SET    DEPARTMENT_ID = #{departmentId}
+		WHERE  EMPLOYEE_ID   = #{employeeId}
+	</update>
+	<select id="getAllJob" resultType="JobVO">
+		SELECT	/*[indexDao] [getAllJob]*/
+				JOB_ID jobId
+				, JOB_NM jobName
+		FROM	HR2.JOB
+	</select>
+	<update id="changeJob" parameterType="hashmap">
+		UPDATE HR2.EMPLOYEES
+		SET    JOB 		= #{jobId}
+		WHERE  EMPLOYEE_ID  = #{employeeId}
+	</update>
 </mapper>
